@@ -10,7 +10,23 @@ import Contact from "./components/Contact.jsx";
 import Footer from "./components/Footer.jsx";
 import Editor from "./pages/Editor.jsx";
 
+function isSupabaseAuthCallback() {
+  const authText = `${window.location.search}${window.location.hash}`;
+  return (
+    authText.includes("access_token=") ||
+    authText.includes("refresh_token=") ||
+    authText.includes("type=recovery") ||
+    authText.includes("error_code=") ||
+    authText.includes("error_description=")
+  );
+}
+
 export default function App() {
+  if (window.location.pathname === "/" && isSupabaseAuthCallback()) {
+    window.history.replaceState({}, "", `/editar${window.location.search}${window.location.hash}`);
+    return <Editor />;
+  }
+
   if (window.location.pathname === "/editar") {
     return <Editor />;
   }

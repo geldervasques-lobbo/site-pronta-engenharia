@@ -66,6 +66,7 @@ export async function signInWithMagicLink(email) {
     email,
     options: {
       emailRedirectTo: `${window.location.origin}/editar`,
+      shouldCreateUser: false,
     },
   });
 
