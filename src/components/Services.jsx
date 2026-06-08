@@ -1,16 +1,15 @@
-import { siteData } from "../data/siteData.js";
+import { useSiteData } from "../data/useSiteData.js";
 
 export default function Services() {
+  const siteData = useSiteData();
+
   return (
     <section id="servicos" className="section bg-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl">
-          <p className="eyebrow">Serviços</p>
-          <h2 className="section-title">Soluções para obras, instalações e operações técnicas.</h2>
-          <p className="section-copy">
-            Um conjunto de serviços voltado a contratantes que precisam de execução responsável,
-            acompanhamento técnico e atendimento compatível com ambientes corporativos e industriais.
-          </p>
+          <p className="eyebrow">{siteData.servicesIntro.eyebrow}</p>
+          <h2 className="section-title">{siteData.servicesIntro.title}</h2>
+          <p className="section-copy">{siteData.servicesIntro.text}</p>
         </div>
         <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {siteData.services.map(({ title, icon: Icon }) => (

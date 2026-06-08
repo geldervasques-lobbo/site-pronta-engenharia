@@ -1,9 +1,10 @@
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
-import { siteData } from "../data/siteData.js";
+import { useSiteData } from "../data/useSiteData.js";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const siteData = useSiteData();
 
   const closeMenu = () => setIsOpen(false);
 

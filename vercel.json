@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/editar",
+      "destination": "/index.html"
+    }
+  ]
+}

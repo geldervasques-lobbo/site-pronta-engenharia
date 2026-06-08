@@ -8,8 +8,13 @@ import Differentials from "./components/Differentials.jsx";
 import CTA from "./components/CTA.jsx";
 import Contact from "./components/Contact.jsx";
 import Footer from "./components/Footer.jsx";
+import Editor from "./pages/Editor.jsx";
 
 export default function App() {
+  if (window.location.pathname === "/editar") {
+    return <Editor />;
+  }
+
   return (
     <div className="min-h-screen bg-stone-50 text-graphite-900">
       <Header />

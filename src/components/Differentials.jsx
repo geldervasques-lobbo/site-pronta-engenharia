@@ -1,12 +1,14 @@
-import { siteData } from "../data/siteData.js";
+import { useSiteData } from "../data/useSiteData.js";
 
 export default function Differentials() {
+  const siteData = useSiteData();
+
   return (
     <section id="diferenciais" className="section bg-stone-50">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl">
-          <p className="eyebrow">Diferenciais</p>
-          <h2 className="section-title">Critérios técnicos para uma execução mais segura.</h2>
+          <p className="eyebrow">{siteData.differentialsIntro.eyebrow}</p>
+          <h2 className="section-title">{siteData.differentialsIntro.title}</h2>
         </div>
         <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {siteData.differentials.map(({ title, icon: Icon }) => (

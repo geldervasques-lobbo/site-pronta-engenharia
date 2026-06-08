@@ -1,19 +1,18 @@
 import { ArrowUpRight } from "lucide-react";
-import { siteData } from "../data/siteData.js";
+import { useSiteData } from "../data/useSiteData.js";
 
 export default function Contact() {
+  const siteData = useSiteData();
+
   return (
     <section id="contato" className="section bg-white">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
         <div>
-          <p className="eyebrow">Contato</p>
-          <h2 className="section-title">Solicite atendimento técnico para sua demanda.</h2>
-          <p className="section-copy">
-            O primeiro contato comercial da PRONTA Engenharia é direcionado pelo WhatsApp. Informe
-            o tipo de serviço, local da demanda e prazo desejado para facilitar o retorno.
-          </p>
+          <p className="eyebrow">{siteData.contactIntro.eyebrow}</p>
+          <h2 className="section-title">{siteData.contactIntro.title}</h2>
+          <p className="section-copy">{siteData.contactIntro.text}</p>
           <a href={siteData.whatsappUrl} className="btn-primary mt-8" target="_blank" rel="noreferrer">
-            Solicitar orçamento
+            {siteData.contactIntro.button}
             <ArrowUpRight size={18} />
           </a>
         </div>

@@ -41,6 +41,52 @@ export const siteData = {
     { label: "Diferenciais", href: "#diferenciais" },
     { label: "Contato", href: "#contato" },
   ],
+  hero: {
+    eyebrow: "Engenharia, construção civil e montagem industrial",
+    title: "Soluções em Engenharia, Construção Civil e Montagem Industrial",
+    subtitle:
+      "Há mais de 13 anos executando obras, instalações e serviços técnicos para os setores industrial, comercial e de infraestrutura.",
+    technicalNote:
+      "Atuação técnica para demandas industriais, comerciais, corporativas e de infraestrutura, com foco em segurança, qualidade e responsabilidade.",
+  },
+  about: {
+    eyebrow: "Sobre a empresa",
+    title: "Execução técnica com presença civil e industrial.",
+    paragraphs: [
+      "A PRONTA Engenharia atua desde 2013 oferecendo soluções em construção civil, montagem industrial, estruturas metálicas, instalações técnicas e serviços de engenharia.",
+      "Com experiência em demandas industriais, comerciais e corporativas, a empresa trabalha com foco em segurança, qualidade, cumprimento de prazos e responsabilidade na execução.",
+    ],
+  },
+  servicesIntro: {
+    eyebrow: "Serviços",
+    title: "Soluções para obras, instalações e operações técnicas.",
+    text:
+      "Um conjunto de serviços voltado a contratantes que precisam de execução responsável, acompanhamento técnico e atendimento compatível com ambientes corporativos e industriais.",
+  },
+  sectorsIntro: {
+    eyebrow: "Setores atendidos",
+    title: "Atendimento para demandas técnicas em diferentes operações.",
+    text:
+      "A PRONTA Engenharia atua com soluções aplicáveis a ambientes industriais, comerciais, corporativos e de infraestrutura.",
+  },
+  differentialsIntro: {
+    eyebrow: "Diferenciais",
+    title: "Critérios técnicos para uma execução mais segura.",
+  },
+  cta: {
+    eyebrow: "Orçamento",
+    title: "Precisa de uma empresa técnica para executar sua obra ou serviço industrial?",
+    text:
+      "Conte com a PRONTA Engenharia para transformar demandas em soluções executadas com responsabilidade, segurança e eficiência.",
+    button: "Falar com a PRONTA no WhatsApp",
+  },
+  contactIntro: {
+    eyebrow: "Contato",
+    title: "Solicite atendimento técnico para sua demanda.",
+    text:
+      "O primeiro contato comercial da PRONTA Engenharia é direcionado pelo WhatsApp. Informe o tipo de serviço, local da demanda e prazo desejado para facilitar o retorno.",
+    button: "Solicitar orçamento",
+  },
   stats: [
     { value: "13+", label: "anos de atuação" },
     { value: "2013", label: "empresa fundada" },

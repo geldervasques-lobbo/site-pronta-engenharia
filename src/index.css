@@ -50,6 +50,18 @@
   .btn-secondary {
     @apply inline-flex items-center gap-2 border border-white/20 bg-white/10 px-6 py-3 text-sm font-bold uppercase tracking-[0.08em] text-white transition hover:bg-white/20 focus:outline-none focus:ring-4 focus:ring-white/20;
   }
+
+  .editor-action-button {
+    @apply inline-flex items-center gap-2 border border-stone-300 px-4 py-3 text-sm font-bold uppercase tracking-[0.06em] transition focus:outline-none focus:ring-4 focus:ring-petroleum-700/15;
+  }
+
+  .editor-small-button {
+    @apply inline-flex items-center gap-2 border border-stone-300 bg-white px-3 py-2 text-xs font-bold uppercase tracking-[0.06em] text-graphite-900 transition hover:bg-stone-50;
+  }
+
+  .editor-icon-button {
+    @apply inline-flex h-12 w-12 shrink-0 items-center justify-center border border-stone-300 bg-white text-graphite-900 transition hover:bg-stone-50;
+  }
 }
 
 .industrial-grid {

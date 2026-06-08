@@ -1,7 +1,9 @@
 import { ArrowRight, HardHat, ShieldCheck } from "lucide-react";
-import { siteData } from "../data/siteData.js";
+import { useSiteData } from "../data/useSiteData.js";
 
 export default function Hero() {
+  const siteData = useSiteData();
+
   return (
     <section id="inicio" className="section-hero relative isolate overflow-hidden bg-petroleum-950 pt-32 text-white">
       <div className="absolute inset-0 -z-10 opacity-35">
@@ -13,15 +15,12 @@ export default function Hero() {
         <div>
           <div className="mb-6 inline-flex items-center gap-2 border border-white/10 bg-white/10 px-4 py-2 text-sm font-medium text-white/80">
             <ShieldCheck size={18} className="text-ambercta" />
-            Engenharia, construção civil e montagem industrial
+            {siteData.hero.eyebrow}
           </div>
           <h1 className="max-w-4xl text-4xl font-semibold leading-tight text-white sm:text-5xl lg:text-6xl">
-            Soluções em Engenharia, Construção Civil e Montagem Industrial
+            {siteData.hero.title}
           </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-white/75">
-            Há mais de 13 anos executando obras, instalações e serviços técnicos para os setores
-            industrial, comercial e de infraestrutura.
-          </p>
+          <p className="mt-6 max-w-2xl text-lg leading-8 text-white/75">{siteData.hero.subtitle}</p>
           <div className="mt-9 flex flex-col gap-3 sm:flex-row">
             <a href={siteData.whatsappUrl} className="btn-primary justify-center" target="_blank" rel="noreferrer">
               Solicitar orçamento
@@ -52,10 +51,7 @@ export default function Hero() {
               ))}
             </div>
             <div className="border-l-4 border-ambercta bg-white/10 p-5">
-              <p className="text-sm leading-6 text-white/75">
-                Atuação técnica para demandas industriais, comerciais, corporativas e de
-                infraestrutura, com foco em segurança, qualidade e responsabilidade.
-              </p>
+              <p className="text-sm leading-6 text-white/75">{siteData.hero.technicalNote}</p>
             </div>
           </div>
         </div>

@@ -31,6 +31,14 @@ Os principais textos, serviços, setores, diferenciais, contatos e domínios fic
 src/data/siteData.js
 ```
 
+Também existe uma página local de edição em:
+
+```text
+/editar
+```
+
+Ela salva rascunhos no navegador para prévia, sem backend e sem banco de dados. Para tornar as mudanças permanentes, exporte o JSON e use como referência para atualizar `src/data/siteData.js`.
+
 Domínio principal configurado: `prontaengenharia.com.br`.
 
 Domínio adicional informado: `prontaengenharia.com`.

@@ -1,6 +1,8 @@
-import { siteData } from "../data/siteData.js";
+import { useSiteData } from "../data/useSiteData.js";
 
 export default function Stats() {
+  const siteData = useSiteData();
+
   return (
     <section className="bg-white">
       <div className="mx-auto grid max-w-7xl border-x border-stone-200 px-4 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:px-8">

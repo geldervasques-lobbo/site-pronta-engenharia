@@ -1,6 +1,8 @@
-import { siteData } from "../data/siteData.js";
+import { useSiteData } from "../data/useSiteData.js";
 
 export default function Footer() {
+  const siteData = useSiteData();
+
   return (
     <footer className="border-t border-white/10 bg-petroleum-950 py-10 text-white">
       <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[1fr_auto] lg:px-8">
