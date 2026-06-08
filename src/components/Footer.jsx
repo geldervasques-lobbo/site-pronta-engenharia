@@ -5,8 +5,8 @@ export default function Footer() {
     <footer className="border-t border-white/10 bg-petroleum-950 py-10 text-white">
       <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[1fr_auto] lg:px-8">
         <div>
-          <div className="flex h-12 w-48 items-center rounded bg-white px-3">
-            <img src={siteData.logo} alt="PRONTA Engenharia" className="max-h-10 w-full object-contain" />
+          <div className="flex h-20 w-64 items-center justify-center border border-white/15 bg-white px-3">
+            <img src={siteData.logo} alt="PRONTA Engenharia" className="h-full max-h-16 w-full object-contain" />
           </div>
           <p className="mt-5 max-w-2xl text-sm leading-6 text-white/60">
             {siteData.legalName}. Empresa de engenharia, construção civil, montagem industrial e

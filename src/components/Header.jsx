@@ -11,11 +11,11 @@ export default function Header() {
     <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-petroleum-950/95 text-white backdrop-blur-xl">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <a href="#inicio" className="flex items-center gap-3" aria-label="PRONTA Engenharia">
-          <span className="flex h-12 w-40 items-center rounded bg-white px-3 shadow-sm sm:w-48">
+          <span className="flex h-16 w-56 items-center justify-center border border-white/20 bg-white px-3 shadow-sm sm:w-64">
             <img
               src={siteData.logo}
               alt="PRONTA Engenharia"
-              className="h-auto max-h-10 w-full object-contain"
+              className="h-full max-h-14 w-full object-contain"
             />
           </span>
         </a>
