@@ -45,7 +45,18 @@ Para configurar:
 2. Rode o arquivo `supabase/schema.sql` no SQL Editor.
 3. Crie usuários em Authentication > Users.
 4. Autorize cada editor inserindo o `user_id` na tabela `editor_profiles`.
-5. Configure na Vercel:
+5. Em Authentication > URL Configuration, configure:
+
+```text
+Site URL: https://prontaengenharia.com.br
+Redirect URLs:
+https://prontaengenharia.com.br/editar
+https://prontaengenharia.com/editar
+https://SEU-PROJETO-VERCEL.vercel.app/editar
+http://localhost:5173/editar
+```
+
+6. Configure na Vercel:
 
 ```text
 VITE_SUPABASE_URL
@@ -56,7 +67,7 @@ Como este projeto usa Vite, as variáveis públicas precisam começar com `VITE_
 
 Recomendação de segurança: no Supabase, mantenha o cadastro público desativado e crie os usuários do cliente manualmente em Authentication > Users. Só usuários com registro em `editor_profiles` conseguem salvar alterações.
 
-Depois faça um novo deploy. O cliente poderá entrar em `/editar` com e-mail e senha.
+Depois faça um novo deploy. O cliente poderá entrar em `/editar` com e-mail e senha, link mágico ou redefinição de senha.
 
 Domínio principal configurado: `prontaengenharia.com.br`.
 

@@ -57,6 +57,51 @@ export async function signInEditor(email, password) {
   return data;
 }
 
+export async function signInWithMagicLink(email) {
+  if (!isSupabaseConfigured) {
+    throw new Error("Configure as variáveis VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY.");
+  }
+
+  const { error } = await supabase.auth.signInWithOtp({
+    email,
+    options: {
+      emailRedirectTo: `${window.location.origin}/editar`,
+    },
+  });
+
+  if (error) {
+    throw error;
+  }
+}
+
+export async function requestPasswordReset(email) {
+  if (!isSupabaseConfigured) {
+    throw new Error("Configure as variáveis VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY.");
+  }
+
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${window.location.origin}/editar`,
+  });
+
+  if (error) {
+    throw error;
+  }
+}
+
+export async function updateEditorPassword(password) {
+  if (!isSupabaseConfigured) {
+    throw new Error("Configure as variáveis VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY.");
+  }
+
+  const { data, error } = await supabase.auth.updateUser({ password });
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
 export async function signOutEditor() {
   if (!isSupabaseConfigured) {
     return;

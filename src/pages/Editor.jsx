@@ -1,4 +1,4 @@
-import { Download, Eye, FileText, Image, Plus, RotateCcw, Save, Trash2 } from "lucide-react";
+import { Download, Eye, FileText, Image, KeyRound, Mail, Plus, RotateCcw, Save, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { siteData } from "../data/siteData.js";
 import { editorStorageKey, notifySiteDataUpdated } from "../data/useSiteData.js";
@@ -9,9 +9,12 @@ import {
   getPublishedContent,
   isSupabaseConfigured,
   onEditorAuthChange,
+  requestPasswordReset,
   savePublishedContent,
   signInEditor,
+  signInWithMagicLink,
   signOutEditor,
+  updateEditorPassword,
   uploadSiteAsset,
 } from "../lib/siteContentService.js";
 
@@ -130,6 +133,11 @@ export default function Editor() {
   const [isLoading, setIsLoading] = useState(isSupabaseConfigured);
   const [isSaving, setIsSaving] = useState(false);
   const [login, setLogin] = useState({ email: "", password: "" });
+  const [passwordReset, setPasswordReset] = useState({ password: "", confirmPassword: "" });
+  const [showPasswordReset, setShowPasswordReset] = useState(() => {
+    const urlText = `${window.location.search}${window.location.hash}`;
+    return urlText.includes("type=recovery") || urlText.includes("recovery") || urlText.includes("code=");
+  });
 
   useEffect(() => {
     if (!isSupabaseConfigured) {
@@ -242,6 +250,58 @@ export default function Editor() {
     }
   };
 
+  const sendMagicLink = async () => {
+    if (!login.email) {
+      setStatus("Informe o e-mail antes de enviar o link mágico.");
+      return;
+    }
+
+    try {
+      await signInWithMagicLink(login.email);
+      setStatus("Link mágico enviado. Abra o e-mail neste aparelho ou no aparelho do cliente.");
+    } catch (error) {
+      setStatus(`Não foi possível enviar o link mágico: ${error.message}`);
+    }
+  };
+
+  const sendPasswordReset = async () => {
+    if (!login.email) {
+      setStatus("Informe o e-mail antes de solicitar a redefinição.");
+      return;
+    }
+
+    try {
+      await requestPasswordReset(login.email);
+      setStatus("E-mail de redefinição enviado. Abra o link e defina a nova senha no editor.");
+    } catch (error) {
+      setStatus(`Não foi possível enviar a redefinição: ${error.message}`);
+    }
+  };
+
+  const submitPasswordReset = async (event) => {
+    event.preventDefault();
+
+    if (passwordReset.password.length < 6) {
+      setStatus("A nova senha precisa ter pelo menos 6 caracteres.");
+      return;
+    }
+
+    if (passwordReset.password !== passwordReset.confirmPassword) {
+      setStatus("A confirmação de senha não confere.");
+      return;
+    }
+
+    try {
+      await updateEditorPassword(passwordReset.password);
+      setPasswordReset({ password: "", confirmPassword: "" });
+      setShowPasswordReset(false);
+      window.history.replaceState({}, "", "/editar");
+      setStatus("Senha atualizada. Você já pode editar o site.");
+    } catch (error) {
+      setStatus(`Não foi possível atualizar a senha: ${error.message}`);
+    }
+  };
+
   const handleSignOut = async () => {
     await signOutEditor();
     setSession(null);
@@ -273,6 +333,14 @@ export default function Editor() {
             <Field label="Senha" type="password" value={login.password} onChange={(value) => setLogin((current) => ({ ...current, password: value }))} />
             <button type="submit" className="btn-primary justify-center">
               Entrar
+            </button>
+            <button type="button" className="editor-action-button justify-center bg-white text-graphite-900 hover:bg-stone-50" onClick={sendMagicLink}>
+              <Mail size={18} />
+              Enviar link mágico
+            </button>
+            <button type="button" className="editor-action-button justify-center bg-white text-graphite-900 hover:bg-stone-50" onClick={sendPasswordReset}>
+              <KeyRound size={18} />
+              Redefinir senha
             </button>
             <a href="/" className="editor-action-button justify-center bg-white text-graphite-900 hover:bg-stone-50">
               Ver site
@@ -322,6 +390,28 @@ export default function Editor() {
 
       <main className="mx-auto grid max-w-7xl gap-6 px-4 py-8 sm:px-6 lg:grid-cols-[0.78fr_1.22fr] lg:px-8">
         <aside className="grid content-start gap-6">
+          {showPasswordReset ? (
+            <Panel title="Definir nova senha" icon={KeyRound}>
+              <form className="grid gap-4" onSubmit={submitPasswordReset}>
+                <Field
+                  label="Nova senha"
+                  type="password"
+                  value={passwordReset.password}
+                  onChange={(value) => setPasswordReset((current) => ({ ...current, password: value }))}
+                />
+                <Field
+                  label="Confirmar nova senha"
+                  type="password"
+                  value={passwordReset.confirmPassword}
+                  onChange={(value) => setPasswordReset((current) => ({ ...current, confirmPassword: value }))}
+                />
+                <button type="submit" className="btn-primary justify-center">
+                  Atualizar senha
+                </button>
+              </form>
+            </Panel>
+          ) : null}
+
           <Panel title="Marca e imagem" icon={Image}>
             <div className="border border-stone-200 bg-stone-50 p-4">
               <div className="flex h-28 items-center justify-center bg-white p-4">
