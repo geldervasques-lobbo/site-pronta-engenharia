@@ -17,7 +17,7 @@ import {
   Wrench,
 } from "lucide-react";
 
-const whatsappNumber = "5571997043158";
+const whatsappNumber = "5571999712362";
 const whatsappMessage =
   "Olá, gostaria de solicitar um orçamento com a PRONTA Engenharia.";
 
@@ -30,7 +30,7 @@ export const siteData = {
   domain: "prontaengenharia.com.br",
   additionalDomain: "prontaengenharia.com",
   email: "pronta@prontaengenharia.com",
-  whatsappDisplay: "(71) 99704-3158",
+  whatsappDisplay: "(71) 99971-2362",
   whatsappUrl: `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`,
   logo: "/logo-pronta.png",
   navItems: [
@@ -132,7 +132,7 @@ export const siteData = {
     { title: "Foco em prazo e qualidade", icon: Wrench },
   ],
   contacts: [
-    { label: "WhatsApp", value: "(71) 99704-3158", icon: Phone },
+    { label: "WhatsApp", value: "(71) 99971-2362", icon: Phone },
     { label: "E-mail", value: "pronta@prontaengenharia.com", icon: Cable },
     { label: "Localização", value: "Catu-BA", icon: MapPin },
     { label: "Atendimento", value: "Nordeste, conforme demanda", icon: Landmark },
