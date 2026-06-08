@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    background: #fafaf9;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background: #d9822b;
+    color: #ffffff;
+  }
+}
+
+@layer components {
+  .section {
+    @apply scroll-mt-20 py-20 sm:py-24 lg:py-28;
+  }
+
+  .section-hero {
+    @apply scroll-mt-20;
+  }
+
+  .eyebrow {
+    @apply text-sm font-bold uppercase tracking-[0.24em] text-ambercta;
+  }
+
+  .section-title {
+    @apply mt-4 max-w-4xl text-3xl font-semibold leading-tight text-graphite-950 sm:text-4xl lg:text-5xl;
+  }
+
+  .section-copy {
+    @apply mt-5 max-w-3xl text-lg leading-8 text-graphite-800/70;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center gap-2 bg-ambercta px-6 py-3 text-sm font-bold uppercase tracking-[0.08em] text-white shadow-lg shadow-orange-900/10 transition hover:bg-[#c87320] focus:outline-none focus:ring-4 focus:ring-ambercta/25;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center gap-2 border border-white/20 bg-white/10 px-6 py-3 text-sm font-bold uppercase tracking-[0.08em] text-white transition hover:bg-white/20 focus:outline-none focus:ring-4 focus:ring-white/20;
+  }
+}
+
+.industrial-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(135deg, transparent 0 48%, rgba(217, 130, 43, 0.18) 48% 50%, transparent 50%);
+  background-size: 44px 44px, 44px 44px, 180px 180px;
+}

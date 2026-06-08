@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://prontaengenharia.com.br/sitemap.xml
