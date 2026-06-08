@@ -179,8 +179,9 @@ export default function Editor() {
     if (isSupabaseConfigured && session) {
       try {
         await savePublishedContent(draft);
+        window.localStorage.setItem(editorStorageKey, JSON.stringify(draft));
         notifySiteDataUpdated();
-        setStatus("Alterações publicadas com segurança no Supabase.");
+        setStatus(`Alterações publicadas no Supabase às ${new Date().toLocaleTimeString("pt-BR")}. Abra o site e atualize a página.`);
       } catch (error) {
         setStatus(`Erro ao salvar no Supabase: ${error.message}`);
       } finally {

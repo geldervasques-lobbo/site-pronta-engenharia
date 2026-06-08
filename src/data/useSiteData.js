@@ -6,14 +6,19 @@ export function useSiteData() {
   const [data, setData] = useState(() => getActiveSiteData());
 
   useEffect(() => {
-    const updateData = () => setData(getActiveSiteData());
     let isMounted = true;
 
-    getPublishedContent().then((content) => {
-      if (isMounted && content) {
-        setData(mergePublishedContent(content));
-      }
-    });
+    const updateData = () => {
+      setData(getActiveSiteData());
+
+      getPublishedContent().then((content) => {
+        if (isMounted && content) {
+          setData(mergePublishedContent(content));
+        }
+      });
+    };
+
+    updateData();
 
     window.addEventListener("storage", updateData);
     window.addEventListener("pronta-site-editor-updated", updateData);
