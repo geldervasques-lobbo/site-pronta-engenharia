@@ -23,7 +23,7 @@ Para visualizar o build:
 npm run preview
 ```
 
-## Conteúdo editável
+## Conteúdo editável e área segura
 
 Os principais textos, serviços, setores, diferenciais, contatos e domínios ficam em:
 
@@ -31,13 +31,32 @@ Os principais textos, serviços, setores, diferenciais, contatos e domínios fic
 src/data/siteData.js
 ```
 
-Também existe uma página local de edição em:
+Também existe uma página de edição em:
 
 ```text
 /editar
 ```
 
-Ela salva rascunhos no navegador para prévia, sem backend e sem banco de dados. Para tornar as mudanças permanentes, exporte o JSON e use como referência para atualizar `src/data/siteData.js`.
+Com Supabase configurado, ela exige login e salva o conteúdo no banco com Row Level Security. Sem Supabase, ela funciona apenas como rascunho local de desenvolvimento.
+
+Para configurar:
+
+1. Crie um projeto no Supabase.
+2. Rode o arquivo `supabase/schema.sql` no SQL Editor.
+3. Crie usuários em Authentication > Users.
+4. Autorize cada editor inserindo o `user_id` na tabela `editor_profiles`.
+5. Configure na Vercel:
+
+```text
+VITE_SUPABASE_URL
+VITE_SUPABASE_ANON_KEY
+```
+
+Como este projeto usa Vite, as variáveis públicas precisam começar com `VITE_`. Se usar a integração Supabase + Vercel, configure o prefixo público como `VITE_` ou crie essas variáveis manualmente em Project Settings > Environment Variables.
+
+Recomendação de segurança: no Supabase, mantenha o cadastro público desativado e crie os usuários do cliente manualmente em Authentication > Users. Só usuários com registro em `editor_profiles` conseguem salvar alterações.
+
+Depois faça um novo deploy. O cliente poderá entrar em `/editar` com e-mail e senha.
 
 Domínio principal configurado: `prontaengenharia.com.br`.
 

@@ -1,14 +1,26 @@
 import { Download, Eye, FileText, Image, Plus, RotateCcw, Save, Trash2 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { siteData } from "../data/siteData.js";
 import { editorStorageKey, notifySiteDataUpdated } from "../data/useSiteData.js";
 import { getStoredEditableData, toEditableData } from "../data/siteEditor.js";
+import {
+  getDefaultEditableContent,
+  getEditorSession,
+  getPublishedContent,
+  isSupabaseConfigured,
+  onEditorAuthChange,
+  savePublishedContent,
+  signInEditor,
+  signOutEditor,
+  uploadSiteAsset,
+} from "../lib/siteContentService.js";
 
-function Field({ label, value, onChange, placeholder }) {
+function Field({ label, value, onChange, placeholder, type = "text" }) {
   return (
     <label className="grid gap-2">
       <span className="text-sm font-semibold text-graphite-900">{label}</span>
       <input
+        type={type}
         value={value ?? ""}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
@@ -113,17 +125,66 @@ function ContactEditor({ values, onChange }) {
 export default function Editor() {
   const initialData = useMemo(() => getStoredEditableData() ?? toEditableData(siteData), []);
   const [draft, setDraft] = useState(initialData);
-  const [status, setStatus] = useState("Rascunho local pronto para edição.");
+  const [status, setStatus] = useState("Carregando editor.");
+  const [session, setSession] = useState(null);
+  const [isLoading, setIsLoading] = useState(isSupabaseConfigured);
+  const [isSaving, setIsSaving] = useState(false);
+  const [login, setLogin] = useState({ email: "", password: "" });
+
+  useEffect(() => {
+    if (!isSupabaseConfigured) {
+      setStatus("Supabase ainda não configurado. O editor está em modo de rascunho local.");
+      return;
+    }
+
+    getEditorSession().then((currentSession) => {
+      setSession(currentSession);
+      setIsLoading(false);
+      setStatus(currentSession ? "Sessão ativa." : "Entre com uma conta autorizada para editar o site.");
+    });
+
+    return onEditorAuthChange((currentSession) => setSession(currentSession));
+  }, []);
+
+  useEffect(() => {
+    if (!isSupabaseConfigured || !session) {
+      return;
+    }
+
+    setStatus("Carregando conteúdo publicado.");
+    getPublishedContent()
+      .then((content) => {
+        setDraft(content ?? getDefaultEditableContent());
+        setStatus("Conteúdo publicado carregado. Edite e salve para publicar.");
+      })
+      .catch((error) => setStatus(`Não foi possível carregar o conteúdo: ${error.message}`));
+  }, [session]);
 
   const update = (key, value) => setDraft((current) => ({ ...current, [key]: value }));
   const updateGroup = (group, key, value) => {
     setDraft((current) => ({ ...current, [group]: { ...current[group], [key]: value } }));
   };
 
-  const saveDraft = () => {
+  const saveDraft = async () => {
+    setIsSaving(true);
+
+    if (isSupabaseConfigured && session) {
+      try {
+        await savePublishedContent(draft);
+        notifySiteDataUpdated();
+        setStatus("Alterações publicadas com segurança no Supabase.");
+      } catch (error) {
+        setStatus(`Erro ao salvar no Supabase: ${error.message}`);
+      } finally {
+        setIsSaving(false);
+      }
+      return;
+    }
+
     window.localStorage.setItem(editorStorageKey, JSON.stringify(draft));
     notifySiteDataUpdated();
-    setStatus("Rascunho salvo neste navegador. Abra a página inicial para visualizar.");
+    setStatus("Rascunho salvo neste navegador. Configure o Supabase para publicar de qualquer aparelho.");
+    setIsSaving(false);
   };
 
   const resetDraft = () => {
@@ -142,26 +203,95 @@ export default function Editor() {
     link.download = "pronta-site-data.json";
     link.click();
     URL.revokeObjectURL(url);
-    setStatus("JSON exportado. Use esse arquivo como referência para atualizar os dados permanentes do site.");
+    setStatus("JSON exportado. Use esse arquivo como referência ou backup do conteúdo.");
   };
 
-  const uploadLogo = (file) => {
+  const uploadLogo = async (file) => {
     if (!file) {
+      return;
+    }
+
+    if (isSupabaseConfigured && session) {
+      setStatus("Enviando imagem para o Supabase Storage.");
+      try {
+        const publicUrl = await uploadSiteAsset(file);
+        update("logo", publicUrl);
+        setStatus("Imagem enviada. Salve as alterações para publicar a nova logo.");
+      } catch (error) {
+        setStatus(`Erro ao enviar imagem: ${error.message}`);
+      }
       return;
     }
 
     const reader = new FileReader();
     reader.onload = () => update("logo", reader.result);
     reader.readAsDataURL(file);
-    setStatus("Logo carregada para prévia local. Para publicar, adicione a imagem em public/ e atualize o caminho.");
+    setStatus("Logo carregada para prévia local. Configure o Supabase Storage para publicar imagens.");
   };
+
+  const submitLogin = async (event) => {
+    event.preventDefault();
+    setStatus("Entrando.");
+
+    try {
+      const data = await signInEditor(login.email, login.password);
+      setSession(data.session);
+      setStatus("Login realizado.");
+    } catch (error) {
+      setStatus(`Não foi possível entrar: ${error.message}`);
+    }
+  };
+
+  const handleSignOut = async () => {
+    await signOutEditor();
+    setSession(null);
+    setStatus("Sessão encerrada.");
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-stone-100 px-4">
+        <div className="border border-stone-200 bg-white p-8 shadow-sm">
+          <p className="eyebrow">Editor</p>
+          <h1 className="mt-3 text-2xl font-semibold text-graphite-950">Carregando acesso seguro.</h1>
+        </div>
+      </div>
+    );
+  }
+
+  if (isSupabaseConfigured && !session) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-petroleum-950 px-4 text-white">
+        <form className="w-full max-w-md border border-white/10 bg-white p-6 text-graphite-950 shadow-2xl" onSubmit={submitLogin}>
+          <p className="eyebrow">Acesso seguro</p>
+          <h1 className="mt-3 text-3xl font-semibold">Entrar no editor</h1>
+          <p className="mt-3 text-sm leading-6 text-graphite-800/70">
+            Use uma conta autorizada no Supabase para editar textos e imagens do site.
+          </p>
+          <div className="mt-6 grid gap-4">
+            <Field label="E-mail" value={login.email} onChange={(value) => setLogin((current) => ({ ...current, email: value }))} />
+            <Field label="Senha" type="password" value={login.password} onChange={(value) => setLogin((current) => ({ ...current, password: value }))} />
+            <button type="submit" className="btn-primary justify-center">
+              Entrar
+            </button>
+            <a href="/" className="editor-action-button justify-center bg-white text-graphite-900 hover:bg-stone-50">
+              Ver site
+            </a>
+          </div>
+          <p className="mt-5 border-l-4 border-ambercta bg-stone-50 p-3 text-sm leading-6 text-graphite-800">
+            {status}
+          </p>
+        </form>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-stone-100 text-graphite-900">
       <header className="border-b border-stone-200 bg-white">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-5 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
           <div>
-            <p className="eyebrow">Editor local</p>
+            <p className="eyebrow">{isSupabaseConfigured ? "Editor seguro" : "Editor local"}</p>
             <h1 className="mt-2 text-3xl font-semibold text-graphite-950">Editar conteúdo da PRONTA Engenharia</h1>
           </div>
           <div className="flex flex-wrap gap-3">
@@ -169,9 +299,9 @@ export default function Editor() {
               <Eye size={18} />
               Ver site
             </a>
-            <button type="button" className="editor-action-button bg-ambercta text-white hover:bg-[#c87320]" onClick={saveDraft}>
+            <button type="button" className="editor-action-button bg-ambercta text-white hover:bg-[#c87320]" onClick={saveDraft} disabled={isSaving}>
               <Save size={18} />
-              Salvar rascunho
+              {isSaving ? "Salvando" : isSupabaseConfigured ? "Publicar" : "Salvar rascunho"}
             </button>
             <button type="button" className="editor-action-button bg-white text-graphite-900 hover:bg-stone-50" onClick={exportJson}>
               <Download size={18} />
@@ -181,6 +311,11 @@ export default function Editor() {
               <RotateCcw size={18} />
               Limpar
             </button>
+            {session ? (
+              <button type="button" className="editor-action-button bg-white text-graphite-900 hover:bg-stone-50" onClick={handleSignOut}>
+                Sair
+              </button>
+            ) : null}
           </div>
         </div>
       </header>
